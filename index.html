@@ -5,35 +5,90 @@
   <title>ลงทะเบียน ChimPro</title>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <style>
-    body { font-family: sans-serif; padding: 20px; background: #f5f5f5; }
-    h2 { color: #444; }
-    input, button, select {
-      display: block; margin: 10px 0; padding: 10px; width: 100%; max-width: 400px;
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
     }
-    .success { color: green; font-weight: bold; }
-    .error { color: red; }
+    body {
+      background: #e9f5f0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      max-width: 450px;
+      width: 90%;
+    }
+    h2 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    input, button {
+      display: block;
+      margin: 12px auto;
+      padding: 12px;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 1rem;
+    }
+    input:focus {
+      border-color: #00b900;
+      outline: none;
+      box-shadow: 0 0 5px rgba(0,185,0,0.2);
+    }
+    button {
+      background-color: #00b900;
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #009c00;
+    }
+    #message {
+      text-align: center;
+      margin-top: 15px;
+    }
+    .success {
+      color: #00b900;
+      font-weight: bold;
+    }
+    .error {
+      color: red;
+    }
   </style>
 </head>
 <body>
-  <h2>ลงทะเบียน ChimPro by เถ้าแก่</h2>
-  <form id="registerForm">
-    <input type="text" id="employeeId" placeholder="รหัสพนักงาน" required>
-    <input type="text" id="fullName" placeholder="ชื่อ-นามสกุล" required>
-    <input type="text" id="nickname" placeholder="ชื่อเล่น" required>
-    <input type="text" id="storeCode" placeholder="รหัสสาขา (เช่น 121)" required>
-    <input type="text" id="storeName" placeholder="ชื่อสาขา (เช่น แม็คโครเชียงใหม่)" required>
-    <button type="submit">ส่งข้อมูล</button>
-    <p id="message"></p>
-  </form>
+  <div class="container">
+    <h2>ลงทะเบียน ChimPro by เถ้าแก่</h2>
+    <form id="registerForm">
+      <input type="text" id="employeeId" placeholder="รหัสพนักงาน" required>
+      <input type="text" id="fullName" placeholder="ชื่อ-นามสกุล" required>
+      <input type="text" id="nickname" placeholder="ชื่อเล่น" required>
+      <input type="text" id="storeCode" placeholder="รหัสสาขา (เช่น 121)" required>
+      <input type="text" id="storeName" placeholder="ชื่อสาขา (เช่น แม็คโครเชียงใหม่)" required>
+      <button type="submit">✅ ส่งข้อมูล</button>
+      <p id="message"></p>
+    </form>
+  </div>
 
   <script>
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbyce6KUSZheJBkVjP7nWYNOkwBtJaNMdo0Gw4XXCNE7wJbzBwbV2o95bD3_E8t0lUnehw/exec"; // 🔁 เปลี่ยนเป็น Web App URL ที่ได้จาก Apps Script
-
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbyce6KUSZheJBkVjP7nWYNOkwBtJaNMdo0Gw4XXCNE7wJbzBwbV2o95bD3_E8t0lUnehw/exec"; // เปลี่ยนตามจริง
     async function init() {
-      await liff.init({ liffId: "<2007659572-ebXEGqkG>" }); // 🔁 ใส่ LIFF ID ที่คุณสร้างใน LINE Developers
+      await liff.init({ liffId: "<ใส่ LIFF ID ที่นี่>" }); // เปลี่ยนตามจริง
       if (!liff.isLoggedIn()) liff.login();
     }
-
     init();
 
     document.getElementById("registerForm").addEventListener("submit", async function(e) {
@@ -73,3 +128,4 @@
   </script>
 </body>
 </html>
+
