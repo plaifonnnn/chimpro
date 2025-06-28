@@ -5,39 +5,21 @@
   <title>ลงทะเบียน ChimPro</title>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
-    }
+    * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
     body {
-      background: #e9f5f0;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background: #e9f5f0; margin: 0; padding: 0;
+      display: flex; align-items: center; justify-content: center;
       min-height: 100vh;
     }
     .container {
-      background: white;
-      padding: 30px;
-      border-radius: 16px;
+      background: white; padding: 30px; border-radius: 16px;
       box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-      max-width: 450px;
-      width: 90%;
+      max-width: 450px; width: 90%;
     }
-    h2 {
-      color: #2c3e50;
-      margin-bottom: 20px;
-      text-align: center;
-    }
+    h2 { color: #2c3e50; margin-bottom: 20px; text-align: center; }
     input, button {
-      display: block;
-      margin: 12px auto;
-      padding: 12px;
-      width: 100%;
-      border: 1px solid #ccc;
-      border-radius: 10px;
+      display: block; margin: 12px auto; padding: 12px;
+      width: 100%; border: 1px solid #ccc; border-radius: 10px;
       font-size: 1rem;
     }
     input:focus {
@@ -47,26 +29,14 @@
     }
     button {
       background-color: #00b900;
-      color: white;
-      font-weight: bold;
-      border: none;
-      cursor: pointer;
+      color: white; font-weight: bold;
+      border: none; cursor: pointer;
       transition: background 0.3s ease;
     }
-    button:hover {
-      background-color: #009c00;
-    }
-    #message {
-      text-align: center;
-      margin-top: 15px;
-    }
-    .success {
-      color: #00b900;
-      font-weight: bold;
-    }
-    .error {
-      color: red;
-    }
+    button:hover { background-color: #009c00; }
+    #message { text-align: center; margin-top: 15px; }
+    .success { color: #00b900; font-weight: bold; }
+    .error { color: red; }
   </style>
 </head>
 <body>
@@ -84,19 +54,40 @@
   </div>
 
   <script>
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbyce6KUSZheJBkVjP7nWYNOkwBtJaNMdo0Gw4XXCNE7wJbzBwbV2o95bD3_E8t0lUnehw/exec"; // เปลี่ยนตามจริง
-    async function init() {
-      await liff.init({ liffId: "2007659572-AGZpBgGB" }); // เปลี่ยนตามจริง
-      if (!liff.isLoggedIn()) liff.login();
+    const liffId = "2007659572-AGZpBgGB"; // LIFF ID ที่ได้จาก LINE Developer Console
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbyce6KUSZheJBkVjP7nWYNOkwBtJaNMdo0Gw4XXCNE7wJbzBwbV2o95bD3_E8t0lUnehw/exec";
+
+    async function initLIFF() {
+      try {
+        await liff.init({ liffId });
+
+        if (!liff.isLoggedIn()) {
+          liff.login({ redirectUri: location.href });
+          return;
+        }
+
+        console.log("LIFF login success");
+      } catch (err) {
+        document.getElementById("message").textContent = "❌ เกิดข้อผิดพลาดตอน init LIFF: " + err.message;
+        document.getElementById("message").className = "error";
+      }
     }
-    init();
+
+    initLIFF();
 
     document.getElementById("registerForm").addEventListener("submit", async function(e) {
       e.preventDefault();
       const msg = document.getElementById("message");
       msg.textContent = "";
+      msg.className = "";
 
       try {
+        if (!liff.isLoggedIn()) {
+          msg.textContent = "❌ กรุณา login ก่อนส่งข้อมูล";
+          msg.className = "error";
+          return;
+        }
+
         const profile = await liff.getProfile();
         const body = {
           lineUserId: profile.userId,
@@ -118,7 +109,7 @@
           msg.className = "success";
           setTimeout(() => liff.closeWindow(), 2000);
         } else {
-          throw new Error("ส่งไม่สำเร็จ");
+          throw new Error("ส่งข้อมูลไม่สำเร็จ");
         }
       } catch (err) {
         msg.textContent = "❌ เกิดข้อผิดพลาด: " + err.message;
@@ -128,4 +119,3 @@
   </script>
 </body>
 </html>
-
