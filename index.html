@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>ลงทะเบียน ChimPro</title>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f5f5f5; }
+    h2 { color: #444; }
+    input, button, select {
+      display: block; margin: 10px 0; padding: 10px; width: 100%; max-width: 400px;
+    }
+    .success { color: green; font-weight: bold; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+  <h2>ลงทะเบียน ChimPro by เถ้าแก่</h2>
+  <form id="registerForm">
+    <input type="text" id="employeeId" placeholder="รหัสพนักงาน" required>
+    <input type="text" id="fullName" placeholder="ชื่อ-นามสกุล" required>
+    <input type="text" id="nickname" placeholder="ชื่อเล่น" required>
+    <input type="text" id="storeCode" placeholder="รหัสสาขา (เช่น 121)" required>
+    <input type="text" id="storeName" placeholder="ชื่อสาขา (เช่น แม็คโครเชียงใหม่)" required>
+    <button type="submit">ส่งข้อมูล</button>
+    <p id="message"></p>
+  </form>
+
+  <script>
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbyce6KUSZheJBkVjP7nWYNOkwBtJaNMdo0Gw4XXCNE7wJbzBwbV2o95bD3_E8t0lUnehw/exec"; // 🔁 เปลี่ยนเป็น Web App URL ที่ได้จาก Apps Script
+
+    async function init() {
+      await liff.init({ liffId: "<2007659572-ebXEGqkG>" }); // 🔁 ใส่ LIFF ID ที่คุณสร้างใน LINE Developers
+      if (!liff.isLoggedIn()) liff.login();
+    }
+
+    init();
+
+    document.getElementById("registerForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const msg = document.getElementById("message");
+      msg.textContent = "";
+
+      try {
+        const profile = await liff.getProfile();
+        const body = {
+          lineUserId: profile.userId,
+          employeeId: document.getElementById("employeeId").value,
+          fullName: document.getElementById("fullName").value,
+          nickname: document.getElementById("nickname").value,
+          storeCode: document.getElementById("storeCode").value,
+          storeName: document.getElementById("storeName").value
+        };
+
+        const res = await fetch(scriptUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+
+        if (res.ok) {
+          msg.textContent = "✅ ลงทะเบียนเรียบร้อยแล้ว!";
+          msg.className = "success";
+          setTimeout(() => liff.closeWindow(), 2000);
+        } else {
+          throw new Error("ส่งไม่สำเร็จ");
+        }
+      } catch (err) {
+        msg.textContent = "❌ เกิดข้อผิดพลาด: " + err.message;
+        msg.className = "error";
+      }
+    });
+  </script>
+</body>
+</html>
